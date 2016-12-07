@@ -1,0 +1,5 @@
+# Folders To Completely Ignore
+SlotMachine/Builds
+SlotMachine/Library/ShaderCache/
+SlotMachine/ScriptAssemblies/
+SlotMachine/metadata/
