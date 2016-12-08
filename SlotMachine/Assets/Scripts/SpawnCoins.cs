@@ -22,7 +22,7 @@ public class SpawnCoins : MonoBehaviour {
 		if(!canDrop)
 		{
 			timeSinceLastDrop += Time.deltaTime;
-			if(timeSinceLastDrop >= 0.3)
+			if(timeSinceLastDrop >= 0.1)
 			{
 				timeSinceLastDrop = 0;
 				canDrop = true;
@@ -50,6 +50,6 @@ public class SpawnCoins : MonoBehaviour {
 
 	private void DropCoin()
 	{
-		Instantiate(coin, this.transform.position, new Quaternion(0.0f, 0.0f, 0.0f, 0.0f));
+		Instantiate(coin, new Vector3((this.transform.position.x - 1.5f) + (Random.value * 3.0f), this.transform.position.y, this.transform.position.z), coin.transform.rotation);
 	}
 }
