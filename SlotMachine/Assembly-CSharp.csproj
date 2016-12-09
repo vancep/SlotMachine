@@ -45,7 +45,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+     <Compile Include="Assets\Scripts\CointScript.cs" />
      <Compile Include="Assets\Scripts\HandleScript.cs" />
+     <Compile Include="Assets\Scripts\InteractionsController.cs" />
      <Compile Include="Assets\Scripts\ReelScript.cs" />
      <Compile Include="Assets\Scripts\SpawnCoins.cs" />
  <Reference Include="UnityEngine.UI">

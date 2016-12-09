@@ -1,10 +1,12 @@
 ﻿<Properties StartupItem="Assembly-CSharp.csproj">
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\HandleScript.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\InteractionsController.cs">
     <Files>
       <File FileName="Assets\Scripts\SpawnCoins.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\ReelScript.cs" Line="1" Column="1" />
-      <File FileName="Assets\Scripts\HandleScript.cs" Line="23" Column="4" />
+      <File FileName="Assets\Scripts\HandleScript.cs" Line="84" Column="5" />
+      <File FileName="Assets\Scripts\CointScript.cs" Line="9" Column="3" />
+      <File FileName="Assets\Scripts\InteractionsController.cs" Line="48" Column="22" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
