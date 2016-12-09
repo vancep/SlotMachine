@@ -22,9 +22,9 @@ public class SpawnCoins : MonoBehaviour {
 		if(!canDrop)
 		{
 			timeSinceLastDrop += Time.deltaTime;
-			if(timeSinceLastDrop >= 0.1)
+			if(timeSinceLastDrop >= 0.1f)
 			{
-				timeSinceLastDrop = 0;
+				timeSinceLastDrop = 0.0f;
 				canDrop = true;
 			}
 		}

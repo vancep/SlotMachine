@@ -6,14 +6,19 @@ public class InteractionsController : MonoBehaviour
 	public GameObject handle;
 	public GameObject knob;
 
+
 	private bool handleClicked;
 	private bool coinClicked;
 
 	private GameObject selectedObject;
 
+	private ReelControllerScript reelController;
+
 	// Use this for initialization
 	void Start () 
 	{
+		reelController = MyFunctions.getAccessTo<ReelControllerScript>("Reel Controller");
+
 		handleClicked = false;
 	}
 	
@@ -62,45 +67,47 @@ public class InteractionsController : MonoBehaviour
 		float buffer = 10.0f;
 		float mousePosDifference;
 
+
 		if(handleClicked)
 		{
-			//Debug.Log("Moving Handle");
-			mousePosDifference = GetMousePosDifference();
-
-			if(mousePosDifference > buffer)
+			if(!reelController.GetReelsSpinning())
 			{
-				if(handle.transform.rotation.x > -0.5f)
+				//Debug.Log("Moving Handle");
+				mousePosDifference = GetMousePosDifference();
+
+				if(mousePosDifference > buffer)
 				{
-					//Debug.Log(handle.transform.rotation.x);
+					if(handle.transform.rotation.x > -0.5f)
+					{
+						//Debug.Log(handle.transform.rotation.x);
 
-					updatedRot = new Quaternion(handle.transform.rotation.x - 0.025f, 
-												handle.transform.rotation.y, 
-												handle.transform.rotation.z, 
-												handle.transform.rotation.w);
+						updatedRot = new Quaternion(handle.transform.rotation.x - 0.025f, 
+							handle.transform.rotation.y, 
+							handle.transform.rotation.z, 
+							handle.transform.rotation.w);
 
-					handle.transform.rotation = updatedRot;
+						handle.transform.rotation = updatedRot;
+					}
+
 				}
-
-			}
-			else if(mousePosDifference < -1.0f * buffer)
-			{
-				if(handle.transform.rotation.x < 0.0f)
+				else if(mousePosDifference < -1.0f * buffer)
 				{
-					updatedRot = new Quaternion(handle.transform.rotation.x + 0.025f, 
-												handle.transform.rotation.y, 
-												handle.transform.rotation.z, 
-												handle.transform.rotation.w);
+					if(handle.transform.rotation.x < 0.0f)
+					{
+						updatedRot = new Quaternion(handle.transform.rotation.x + 0.025f, 
+							handle.transform.rotation.y, 
+							handle.transform.rotation.z, 
+							handle.transform.rotation.w);
 
-					handle.transform.rotation = updatedRot;
+						handle.transform.rotation = updatedRot;
+					}
+
 				}
-
+				else
+				{
+					// do nothing for now
+				}
 			}
-			else
-			{
-				// do nothing for now
-			}
-
-
 		}
 		else // move handle back towards default position
 		{
@@ -113,6 +120,13 @@ public class InteractionsController : MonoBehaviour
 
 				handle.transform.rotation = updatedRot;
 			}
+		}
+
+		// check if handle is at bottom position
+		if (handle.transform.rotation.x < -0.45f)
+		{
+			reelController.SpinReels();
+			handleClicked = false;
 		}
 	}
 
