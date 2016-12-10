@@ -28,7 +28,14 @@ public class InteractionsController : MonoBehaviour
 		if(Input.GetMouseButtonUp(0))
 		{
 			handleClicked = false;
-			coinClicked = false;
+
+			if(coinClicked)
+			{
+				coinClicked = false;
+				Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
+				rb.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+				rb.angularVelocity = new Vector3(0.0f, 0.0f, 0.0f);
+			}
 
 			//Cursor.visible = true;
 		}
@@ -54,12 +61,15 @@ public class InteractionsController : MonoBehaviour
 
 			if(Physics.Raycast(ray, out rayHit, 150))
 			{
-				selectedObject.transform.position = rayHit.point;
+				Vector3 rayVector = rayHit.point;
+				Debug.Log(rayVector);
+				selectedObject.transform.position = rayVector;
 			}
 
 		}
 	}
 
+	// might want to change rotation stuff to use eulerangles instead of weird quaternions
 	private void MoveHandle()
 	{
 		Quaternion updatedRot;
