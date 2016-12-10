@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using UnityEngine.UI;
 
 public class InteractionsController : MonoBehaviour 
 {
@@ -7,9 +8,13 @@ public class InteractionsController : MonoBehaviour
 	public GameObject knob;
 	public GameObject invisibleSlope;
 	public GameObject coinSlot;
+	public GameObject[] creditLights = new GameObject[3];
+	public GameObject creditsObj;
 
 	private bool handleClicked;
 	private bool coinClicked;
+
+	private int numCredits = 0;
 
 	private GameObject selectedObject;
 
@@ -73,13 +78,16 @@ public class InteractionsController : MonoBehaviour
 
 		if(Physics.Raycast(ray, out rayHit, 150))
 		{
-			Vector3 rayVector = rayHit.point;
+			//Vector3 rayVector = rayHit.point;
 
 			selectedObject.transform.position = new Vector3(rayHit.point.x, rayHit.point.y + 0.5f, rayHit.point.z);
 
 			if(rayHit.transform.gameObject.tag == "Inner Coin Detector")
 			{
-				DropCoin();
+				if(numCredits < 3)
+				{
+					DropCoin();
+				}
 			}
 			/* Cool stuff but ultimately ended up not being neccessary
 			yHeight = rayHit.point.y + 4.0f;
@@ -114,6 +122,24 @@ public class InteractionsController : MonoBehaviour
 		selectedObject.GetComponent<MeshCollider>().enabled = false;
 
 		// increment credits
+		IncrementCredits();
+	}
+
+	private void IncrementCredits()
+	{
+		numCredits++;
+		UpdateCreditsText();
+	}
+
+	private void DecrementCredits()
+	{
+		numCredits--;
+		UpdateCreditsText();
+	}
+
+	private void UpdateCreditsText()
+	{
+		creditsObj.GetComponent<Text>().text = "Credits: " + numCredits;	
 	}
 
 	// might want to change rotation stuff to use eulerangles instead of weird quaternions
@@ -182,8 +208,12 @@ public class InteractionsController : MonoBehaviour
 		// check if handle is at bottom position
 		if (handle.transform.rotation.x < -0.45f)
 		{
-			reelController.SpinReels();
-			handleClicked = false;
+			if(numCredits > 0)
+			{
+				DecrementCredits();
+				reelController.SpinReels();
+				handleClicked = false;
+			}
 		}
 	}
 
