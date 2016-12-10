@@ -53,6 +53,7 @@ public class InteractionsController : MonoBehaviour
 
 	private void MoveCoin()
 	{
+		float yHeight = 4.0f;
 
 		if(coinClicked)
 		{
@@ -63,7 +64,17 @@ public class InteractionsController : MonoBehaviour
 			{
 				Vector3 rayVector = rayHit.point;
 				Debug.Log(rayVector);
-				selectedObject.transform.position = rayVector;
+				//selectedObject.transform.position = rayVector;
+
+				float mTop = (rayVector.y - Camera.main.transform.position.y);
+				float mx = mTop / (rayVector.x - Camera.main.transform.position.x);
+				float bx = rayVector.y - (mx * rayVector.x);
+				float mz = mTop / (rayVector.z - Camera.main.transform.position.z);;
+				float bz = rayVector.y - (mz * rayVector.z);
+				float xCord = (yHeight - bx)/mx;
+				float zCord = (yHeight - bz)/mz;
+
+				selectedObject.transform.position = new Vector3(xCord, yHeight, zCord);
 			}
 
 		}
