@@ -14,7 +14,7 @@ public class CoinScript : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-	
+		
 	}
 
 	void FixedUpdate()

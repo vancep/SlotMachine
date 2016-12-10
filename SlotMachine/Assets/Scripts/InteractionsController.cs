@@ -5,7 +5,8 @@ public class InteractionsController : MonoBehaviour
 {
 	public GameObject handle;
 	public GameObject knob;
-
+	public GameObject invisibleSlope;
+	public GameObject coinSlot;
 
 	private bool handleClicked;
 	private bool coinClicked;
@@ -31,10 +32,7 @@ public class InteractionsController : MonoBehaviour
 
 			if(coinClicked)
 			{
-				coinClicked = false;
-				Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
-				rb.velocity = new Vector3(0.0f, 0.0f, 0.0f);
-				rb.angularVelocity = new Vector3(0.0f, 0.0f, 0.0f);
+				DisableCoin();
 			}
 
 			//Cursor.visible = true;
@@ -48,36 +46,74 @@ public class InteractionsController : MonoBehaviour
 
 		MoveHandle();
 
-		MoveCoin();
+		if(coinClicked)
+		{
+			MoveCoin();
+		}
+
+	}
+
+	private void DisableCoin()
+	{
+		coinClicked = false;
+		Rigidbody rb = selectedObject.GetComponent<Rigidbody>();
+		rb.velocity = new Vector3(0.0f, 0.0f, 0.0f);
+		rb.angularVelocity = new Vector3(0.0f, 0.0f, 0.0f);
+		selectedObject.layer = 0;
+		invisibleSlope.GetComponent<MeshCollider>().enabled = false;
+		selectedObject.GetComponent<Rigidbody>().useGravity = true;
 	}
 
 	private void MoveCoin()
 	{
-		float yHeight = 4.0f;
+		//float yHeight; 
 
-		if(coinClicked)
+		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+		RaycastHit rayHit;
+
+		if(Physics.Raycast(ray, out rayHit, 150))
 		{
-			Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-			RaycastHit rayHit;
+			Vector3 rayVector = rayHit.point;
 
-			if(Physics.Raycast(ray, out rayHit, 150))
+			selectedObject.transform.position = new Vector3(rayHit.point.x, rayHit.point.y + 0.5f, rayHit.point.z);
+
+			if(rayHit.transform.gameObject.tag == "Inner Coin Detector")
 			{
-				Vector3 rayVector = rayHit.point;
-				Debug.Log(rayVector);
-				//selectedObject.transform.position = rayVector;
-
-				float mTop = (rayVector.y - Camera.main.transform.position.y);
-				float mx = mTop / (rayVector.x - Camera.main.transform.position.x);
-				float bx = rayVector.y - (mx * rayVector.x);
-				float mz = mTop / (rayVector.z - Camera.main.transform.position.z);;
-				float bz = rayVector.y - (mz * rayVector.z);
-				float xCord = (yHeight - bx)/mx;
-				float zCord = (yHeight - bz)/mz;
-
-				selectedObject.transform.position = new Vector3(xCord, yHeight, zCord);
+				DropCoin();
 			}
+			/* Cool stuff but ultimately ended up not being neccessary
+			yHeight = rayHit.point.y + 4.0f;
+			Debug.Log(yHeight);
+			//Debug.Log(rayVector);
+			//selectedObject.transform.position = rayVector;
 
+			float mTop = (rayVector.y - Camera.main.transform.position.y);
+			float mx = mTop / (rayVector.x - Camera.main.transform.position.x);
+			float bx = rayVector.y - (mx * rayVector.x);
+			float mz = mTop / (rayVector.z - Camera.main.transform.position.z);;
+			float bz = rayVector.y - (mz * rayVector.z);
+			float xCord = (yHeight - bx)/mx;
+			float zCord = (yHeight - bz)/mz;
+
+			selectedObject.transform.position = new Vector3(xCord, yHeight, zCord);
+			*/
 		}
+	}
+
+	private void DropCoin()
+	{
+		DisableCoin();
+
+		// don't let coin be picked up
+		selectedObject.layer = 2;
+
+		// move coin over slot
+		selectedObject.transform.position = new Vector3(coinSlot.transform.position.x, coinSlot.transform.position.y + 1.0f, coinSlot.transform.position.z);
+
+		// allow coin to fall through slot
+		selectedObject.GetComponent<MeshCollider>().enabled = false;
+
+		// increment credits
 	}
 
 	// might want to change rotation stuff to use eulerangles instead of weird quaternions
@@ -172,6 +208,9 @@ public class InteractionsController : MonoBehaviour
 				{
 					coinClicked = true;
 					selectedObject = rayHit.transform.gameObject;
+					selectedObject.layer = 2; // makes the object now be ignored by the raycast so the raycast can see through it
+					selectedObject.GetComponent<Rigidbody>().useGravity = false;
+					invisibleSlope.GetComponent<MeshCollider>().enabled = true; // helps the coin move up to the coin slot
 				}
 			}
 		}
