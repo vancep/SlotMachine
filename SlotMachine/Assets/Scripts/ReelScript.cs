@@ -22,8 +22,14 @@ public class ReelScript : MonoBehaviour
 
 	public void StopReel()
 	{
+		float x;
+
 		rb.angularVelocity = new Vector3(0.0f, 0.0f, 0.0f);
 		isStopped = true;
+
+		x = rb.rotation.eulerAngles.x;
+			
+		rb.transform.eulerAngles = new Vector3(((int)(x/18) * 18.0f), rb.transform.eulerAngles.y, rb.transform.eulerAngles.z);
 	}
 
 	public bool GetStopped()
