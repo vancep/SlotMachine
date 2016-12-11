@@ -84,7 +84,7 @@ public class InteractionsController : MonoBehaviour
 
 			if(rayHit.transform.gameObject.tag == "Inner Coin Detector")
 			{
-				if(numCredits < 3)
+				if(numCredits < 1000000)
 				{
 					DropCoin();
 				}
@@ -139,7 +139,7 @@ public class InteractionsController : MonoBehaviour
 
 	private void UpdateCreditsText()
 	{
-		creditsObj.GetComponent<Text>().text = "Credits: " + numCredits;	
+		creditsObj.GetComponent<TextMesh>().text = "Credits: " + numCredits;	
 	}
 
 	// might want to change rotation stuff to use eulerangles instead of weird quaternions
@@ -206,7 +206,7 @@ public class InteractionsController : MonoBehaviour
 		}
 
 		// check if handle is at bottom position
-		if (handle.transform.rotation.x < -0.45f)
+		if (handle.transform.rotation.x < -0.45f && handleClicked == true)
 		{
 			if(numCredits > 0)
 			{

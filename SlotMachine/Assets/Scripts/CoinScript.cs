@@ -26,13 +26,13 @@ public class CoinScript : MonoBehaviour
 	{
 		if(other.gameObject.CompareTag("Outer Coin Detector"))
 		{
-			Debug.Log("Rotated Coin For Entry");
+			//Debug.Log("Rotated Coin For Entry");
 			rb.transform.eulerAngles = new Vector3(90.0f, 0.0f, 0.0f);
 			rb.freezeRotation = true;
 		}
 		else if(other.gameObject.CompareTag("Inner Coin Detector"))
 		{
-			Debug.Log("ouch");
+			//Debug.Log("ouch");
 		}
 	}
 
