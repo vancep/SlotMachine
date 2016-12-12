@@ -8,10 +8,15 @@ public class ReelControllerScript : MonoBehaviour
 
 	private float timeSinceLastStop = 0.0f;
 	private float timeDelay;
+
+	private float timeSinceLastDispense = 0.0f;
+	private float dispenseDelay = 0.1f;
+
 	private bool stopReels;
 	private bool reelsSpinning;
 	private int payout;
 	private int[] results;
+	private InteractionsController interactionsController;
 
 	enum Symbols {Queen, Ace, Spade, Seven, Diamond, Jack, Heart, King, Cherry, Club};
 
@@ -22,6 +27,8 @@ public class ReelControllerScript : MonoBehaviour
 		stopReels = false;
 		reelsSpinning = false;
 		results = new int[reels.Length];
+
+		interactionsController = MyFunctions.getAccessTo<InteractionsController>("Interaction Controller");
 
 		for(int i = 0; i < reels.Length; i++)
 		{
@@ -58,33 +65,14 @@ public class ReelControllerScript : MonoBehaviour
 	{
 		if(stopReels)
 		{
-			// if delayed long enough
-			timeSinceLastStop += Time.deltaTime;
-			timeDelay = (Random.value * 0.5f) + 0.2f;
-
-			if(timeSinceLastStop >= timeDelay)
-			{
-				timeSinceLastStop = 0.0f;
-
-				for(int i = 0; i < reels.Length; i++)
-				{
-					if(reels[i].GetComponent<ReelScript>().GetStopped() == false)
-					{
-						reels[i].GetComponent<ReelScript>().StopReel();
-						break;
-					}
-				}
-
-				// check if the wheels have all been stopped
-				if(reels[reels.Length - 1].GetComponent<ReelScript>().GetStopped() == true)
-				{
-					stopReels = false;
-					reelsSpinning = false;
-					CheckResults();
-				}
-			}
-
+			WorkOnStoppingReels();
 		}
+
+		if(payout > 0)
+		{
+			DispensePayout();
+		}
+
 	}
 
 	private void CheckResults()
@@ -145,14 +133,20 @@ public class ReelControllerScript : MonoBehaviour
 			}
 		}
 	}
-
-	// when this gets called by another class to claim the payout, the payout then gets cleared so it can't be claimed again
-	public int CollectPayout()
+		
+	private void DispensePayout()
 	{
-		Debug.Log("Paying: " + payout);
-		int temp = payout;
-		payout = 0;
-		return temp;
+		// if delayed long enough
+		timeSinceLastDispense += Time.deltaTime;
+
+		if(timeSinceLastDispense >= dispenseDelay)
+		{
+			timeSinceLastDispense = 0.0f;
+
+			interactionsController.IncrementCredits();
+
+			payout--;
+		}
 	}
 
 	private void GetResultsOfReels()
@@ -195,5 +189,35 @@ public class ReelControllerScript : MonoBehaviour
 
 		Debug.Log("Cherries: " + numCherries);
 		return numCherries;
+	}
+
+	private void WorkOnStoppingReels()
+	{
+		// if delayed long enough
+		timeSinceLastStop += Time.deltaTime;
+		timeDelay = (Random.value * 0.5f) + 0.2f;
+
+		if(timeSinceLastStop >= timeDelay)
+		{
+			timeSinceLastStop = 0.0f;
+
+			for(int i = 0; i < reels.Length; i++)
+			{
+				if(reels[i].GetComponent<ReelScript>().GetStopped() == false)
+				{
+					reels[i].GetComponent<ReelScript>().StopReel();
+					break;
+				}
+			}
+
+			// check if the wheels have all been stopped
+			if(reels[reels.Length - 1].GetComponent<ReelScript>().GetStopped() == true)
+			{
+				stopReels = false;
+				reelsSpinning = false;
+				CheckResults();
+			}
+		}
+
 	}
 }
