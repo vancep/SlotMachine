@@ -10,12 +10,17 @@ public class ReelControllerScript : MonoBehaviour
 	private float timeDelay;
 	private bool stopReels;
 	private bool reelsSpinning;
+	private bool getResults;
+
+	private int[] results;
 
 	// Use this for initialization
 	void Start () 
 	{
 		stopReels = false;
 		reelsSpinning = false;
+		getResults = false;
+		results = new int[reels.Length];
 
 		for(int i = 0; i < reels.Length; i++)
 		{
@@ -74,12 +79,28 @@ public class ReelControllerScript : MonoBehaviour
 				{
 					stopReels = false;
 					reelsSpinning = false;
+					getResults = true;
 				}
 			}
 
 
 		}
+		else if(getResults)
+		{
+			GetResultsOfReels();
+			getResults = false;
+		}
 
+
+	}
+
+	private void GetResultsOfReels()
+	{
+		for(int i = 0; i < reels.Length; i++)
+		{
+			results[i] = reels[i].GetComponent<ReelScript>().GetResult();
+			Debug.Log("Results for " + i + ": " + results[i]);
+		}
 
 	}
 }

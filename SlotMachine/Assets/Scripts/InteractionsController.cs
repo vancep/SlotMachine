@@ -14,7 +14,7 @@ public class InteractionsController : MonoBehaviour
 	private bool handleClicked;
 	private bool coinClicked;
 
-	private int numCredits = 0;
+	private int numCredits = 100;
 
 	private GameObject selectedObject;
 
