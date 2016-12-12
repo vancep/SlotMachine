@@ -10,16 +10,17 @@ public class ReelControllerScript : MonoBehaviour
 	private float timeDelay;
 	private bool stopReels;
 	private bool reelsSpinning;
-	private bool getResults;
-
+	private int payout;
 	private int[] results;
+
+	enum Symbols {Queen, Ace, Spade, Seven, Diamond, Jack, Heart, King, Cherry, Club};
 
 	// Use this for initialization
 	void Start () 
 	{
+		payout = 0;
 		stopReels = false;
 		reelsSpinning = false;
-		getResults = false;
 		results = new int[reels.Length];
 
 		for(int i = 0; i < reels.Length; i++)
@@ -79,28 +80,120 @@ public class ReelControllerScript : MonoBehaviour
 				{
 					stopReels = false;
 					reelsSpinning = false;
-					getResults = true;
+					CheckResults();
 				}
 			}
 
-
 		}
-		else if(getResults)
+	}
+
+	private void CheckResults()
+	{
+		int numCherries = 0;
+
+		GetResultsOfReels();
+
+		if(ResultsAllSame())
 		{
-			GetResultsOfReels();
-			getResults = false;
+			switch(results[0])
+			{
+			case (int)Symbols.Ace: 
+				payout += 50;
+				break;
+			case (int)Symbols.Cherry:
+				payout += 50;
+				break;
+			case (int)Symbols.Club:
+				payout += 35;
+				break;
+			case (int)Symbols.Diamond:
+				payout += 35;
+				break;
+			case (int)Symbols.Heart:
+				payout += 35;
+				break;
+			case (int)Symbols.Jack:
+				payout += 25;
+				break;
+			case (int)Symbols.King:
+				payout += 45;
+				break;
+			case (int)Symbols.Queen:
+				payout += 35;
+				break;
+			case (int)Symbols.Seven:
+				payout += 200;
+				break;
+			case (int)Symbols.Spade:
+				payout += 35;
+				break;
+			}
 		}
+		else
+		{
+			numCherries = ResultsNumCherries();
 
+			switch(numCherries)
+			{
+			case 1:
+				payout += 1;
+				break;
+			case 2:
+				payout += 5;
+				break;
+				// unless more reels are added, only these two options are possible since 3 Cherries would be caught by the function ResultsAllSame
+			}
+		}
+	}
 
+	// when this gets called by another class to claim the payout, the payout then gets cleared so it can't be claimed again
+	public int CollectPayout()
+	{
+		Debug.Log("Paying: " + payout);
+		int temp = payout;
+		payout = 0;
+		return temp;
 	}
 
 	private void GetResultsOfReels()
 	{
+		// get what 
 		for(int i = 0; i < reels.Length; i++)
 		{
 			results[i] = reels[i].GetComponent<ReelScript>().GetResult();
-			Debug.Log("Results for " + i + ": " + results[i]);
+			//Debug.Log("Results for " + i + ": " + results[i]);
 		}
 
+	}
+
+	private bool ResultsAllSame()
+	{
+		for(int i = 1; i < results.Length; i++)
+		{
+			if(results[i] != results[i-1])
+			{
+				Debug.Log("Not All The Same");
+				return false;
+			}
+		}
+
+		Debug.Log("All The Same");
+		return true;
+	}
+
+	private int ResultsNumCherries()
+	{
+		int numCherries = 0;
+
+		for(int i = 0; i < results.Length; i++)
+		{
+			if(results[i] == (int)Symbols.Cherry)
+			{
+				numCherries++;
+			}
+		}
+
+		Debug.Log("Cherries: " + numCherries);
+		return numCherries;
 	}
 }

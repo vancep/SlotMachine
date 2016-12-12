@@ -13,7 +13,7 @@ public class InteractionsController : MonoBehaviour
 
 	private bool handleClicked;
 	private bool coinClicked;
-
+	private int payout = 0;
 	private int numCredits = 100;
 
 	private GameObject selectedObject;
@@ -40,6 +40,15 @@ public class InteractionsController : MonoBehaviour
 				DisableCoin();
 			}
 
+			payout = reelController.CollectPayout();
+			if(payout != 0)
+			{
+				numCredits += payout;
+				payout = 0;
+				UpdateCreditsText();
+			}
+	
+				
 			//Cursor.visible = true;
 		}
 	}

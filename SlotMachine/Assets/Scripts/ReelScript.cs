@@ -71,7 +71,7 @@ public class ReelScript : MonoBehaviour
 			rotation.x += 360.0f;
 		}
 
-		Debug.Log(rotation);
+		//Debug.Log(rotation);
 
 		for(int i = 0; i < 20; i++)
 		{
