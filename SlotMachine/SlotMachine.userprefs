@@ -6,7 +6,7 @@
       <File FileName="Assets\Scripts\SpawnCoins.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\ReelScript.cs" Line="1" Column="1" />
       <File FileName="Assets\Scripts\InteractionsController.cs" Line="123" Column="3" />
-      <File FileName="Assets\Scripts\ReelControllerScript.cs" Line="224" Column="1" />
+      <File FileName="Assets\Scripts\ReelControllerScript.cs" Line="32" Column="55" />
       <File FileName="Assets\Scripts\CoinScript.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>

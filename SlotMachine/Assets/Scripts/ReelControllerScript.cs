@@ -6,6 +6,19 @@ public class ReelControllerScript : MonoBehaviour
 {
 	public GameObject[] reels = new GameObject[3];
 
+	public int heartPayout;
+	public int kingPayout;
+	public int oneCherryPayout;
+	public int twoCherriesPayout;
+	public int threeCherriesPayout;
+	public int clubPayout;
+	public int queenPayout;
+	public int acePayout;
+	public int spadePayout;
+	public int sevenPayout;
+	public int diamondPayout;
+	public int jackPayout;
+
 	private float timeSinceLastStop = 0.0f;
 	private float timeDelay;
 
@@ -86,34 +99,34 @@ public class ReelControllerScript : MonoBehaviour
 			switch(results[0])
 			{
 			case (int)Symbols.Ace: 
-				payout += 50;
+				payout += acePayout;
 				break;
 			case (int)Symbols.Cherry:
-				payout += 50;
+				payout += threeCherriesPayout;
 				break;
 			case (int)Symbols.Club:
-				payout += 35;
+				payout += clubPayout;
 				break;
 			case (int)Symbols.Diamond:
-				payout += 35;
+				payout += diamondPayout;
 				break;
 			case (int)Symbols.Heart:
-				payout += 35;
+				payout += heartPayout;
 				break;
 			case (int)Symbols.Jack:
-				payout += 25;
+				payout += jackPayout;
 				break;
 			case (int)Symbols.King:
-				payout += 45;
+				payout += kingPayout;
 				break;
 			case (int)Symbols.Queen:
-				payout += 35;
+				payout += queenPayout;
 				break;
 			case (int)Symbols.Seven:
-				payout += 200;
+				payout += sevenPayout;
 				break;
 			case (int)Symbols.Spade:
-				payout += 35;
+				payout += spadePayout;
 				break;
 			}
 		}
@@ -124,10 +137,10 @@ public class ReelControllerScript : MonoBehaviour
 			switch(numCherries)
 			{
 			case 1:
-				payout += 1;
+				payout += oneCherryPayout;
 				break;
 			case 2:
-				payout += 5;
+				payout += twoCherriesPayout;
 				break;
 				// unless more reels are added, only these two options are possible since 3 Cherries would be caught by the function ResultsAllSame
 			}
