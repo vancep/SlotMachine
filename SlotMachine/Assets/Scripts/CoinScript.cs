@@ -1,8 +1,12 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Threading;
 
 public class CoinScript : MonoBehaviour 
 {
+	private float timeToDestroy;
+	private float life = 2.0f; // 1 sec = 1.0f
+	private bool destroy = false;
 
 	private Rigidbody rb;
 	// Use this for initialization
@@ -14,7 +18,17 @@ public class CoinScript : MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-		
+
+		if(destroy)
+		{
+			timeToDestroy += Time.deltaTime;
+			Debug.Log(timeToDestroy);
+
+			if(timeToDestroy >= life)
+			{
+				DestroyImmediate(this.gameObject);
+			}
+		}
 	}
 
 	void FixedUpdate()
@@ -42,5 +56,12 @@ public class CoinScript : MonoBehaviour
 		{
 			rb.freezeRotation = false;
 		}
+	}
+
+	public void SetToDestroy()
+	{
+		Debug.Log("Coin set to be destroyed");
+		destroy = true;
+		timeToDestroy = 0.0f;
 	}
 }

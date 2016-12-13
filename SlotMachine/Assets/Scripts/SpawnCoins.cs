@@ -5,8 +5,12 @@ using System.Threading;
 public class SpawnCoins : MonoBehaviour {
 
 	public GameObject coin;
+	public GameObject currentPayoutText;
+	public GameObject previousPayoutText;
+
 
 	private int coinsToDrop = 0;
+	private int previousPayout = 0;
 	private float timeSinceLastDrop = 0.0f;
 	private bool canDrop = false;
 
@@ -18,6 +22,7 @@ public class SpawnCoins : MonoBehaviour {
 	// Update is called once per frame
 	void Update () 
 	{
+		currentPayoutText.GetComponent<TextMesh>().text = "Current Payout: " + coinsToDrop;
 
 		if(!canDrop)
 		{
@@ -40,6 +45,9 @@ public class SpawnCoins : MonoBehaviour {
 
 	public void AddCoinsToDrop(int amount)
 	{
+		previousPayoutText.GetComponent<TextMesh>().text = "Previous Payout: " + previousPayout;
+		previousPayout = amount;
+
 		Debug.Log("Adding " + amount + " coins.");
 		if(amount >= 0)
 		{

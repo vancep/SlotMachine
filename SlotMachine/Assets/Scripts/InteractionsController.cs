@@ -14,7 +14,7 @@ public class InteractionsController : MonoBehaviour
 	private bool handleClicked;
 	private bool coinClicked;
 	public int payout = 0;
-	private int numCredits = 100;
+	private int numCredits;
 
 	private GameObject selectedObject;
 
@@ -23,6 +23,9 @@ public class InteractionsController : MonoBehaviour
 	// Use this for initialization
 	void Start () 
 	{
+		numCredits = 100;
+		UpdateCreditsText();
+
 		reelController = MyFunctions.getAccessTo<ReelControllerScript>("Reel Controller");
 
 		handleClicked = false;
@@ -71,7 +74,6 @@ public class InteractionsController : MonoBehaviour
 
 	private void MoveCoin()
 	{
-		//float yHeight; 
 
 		Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 		RaycastHit rayHit;
@@ -89,22 +91,6 @@ public class InteractionsController : MonoBehaviour
 					DropCoin();
 				}
 			}
-			/* Cool stuff but ultimately ended up not being neccessary
-			yHeight = rayHit.point.y + 4.0f;
-			Debug.Log(yHeight);
-			//Debug.Log(rayVector);
-			//selectedObject.transform.position = rayVector;
-
-			float mTop = (rayVector.y - Camera.main.transform.position.y);
-			float mx = mTop / (rayVector.x - Camera.main.transform.position.x);
-			float bx = rayVector.y - (mx * rayVector.x);
-			float mz = mTop / (rayVector.z - Camera.main.transform.position.z);;
-			float bz = rayVector.y - (mz * rayVector.z);
-			float xCord = (yHeight - bx)/mx;
-			float zCord = (yHeight - bz)/mz;
-
-			selectedObject.transform.position = new Vector3(xCord, yHeight, zCord);
-			*/
 		}
 	}
 
@@ -123,6 +109,9 @@ public class InteractionsController : MonoBehaviour
 
 		// increment credits
 		IncrementCredits();
+
+		// destroy coin soon so it does not fall through space forever
+		selectedObject.GetComponent<CoinScript>().SetToDestroy();
 	}
 
 	public void IncrementCredits()

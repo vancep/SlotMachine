@@ -5,6 +5,7 @@ using System.Threading;
 public class ReelControllerScript : MonoBehaviour 
 {
 	public GameObject[] reels = new GameObject[3];
+	public GameObject coinSpawner;
 
 	public int heartPayout;
 	public int kingPayout;
@@ -22,14 +23,10 @@ public class ReelControllerScript : MonoBehaviour
 	private float timeSinceLastStop = 0.0f;
 	private float timeDelay;
 
-	private float timeSinceLastDispense = 0.0f;
-	private float dispenseDelay = 0.1f;
-
 	private bool stopReels;
 	private bool reelsSpinning;
 	private int payout;
 	private int[] results;
-	private InteractionsController interactionsController;
 
 	enum Symbols {Queen, Ace, Spade, Seven, Diamond, Jack, Heart, King, Cherry, Club};
 
@@ -40,8 +37,6 @@ public class ReelControllerScript : MonoBehaviour
 		stopReels = false;
 		reelsSpinning = false;
 		results = new int[reels.Length];
-
-		interactionsController = MyFunctions.getAccessTo<InteractionsController>("Interaction Controller");
 
 		for(int i = 0; i < reels.Length; i++)
 		{
@@ -80,12 +75,6 @@ public class ReelControllerScript : MonoBehaviour
 		{
 			WorkOnStoppingReels();
 		}
-
-		if(payout > 0)
-		{
-			DispensePayout();
-		}
-
 	}
 
 	private void CheckResults()
@@ -145,21 +134,18 @@ public class ReelControllerScript : MonoBehaviour
 				// unless more reels are added, only these two options are possible since 3 Cherries would be caught by the function ResultsAllSame
 			}
 		}
+
+		if(payout > 0)
+		{
+			DispensePayout();
+		}
 	}
 		
 	private void DispensePayout()
 	{
-		// if delayed long enough
-		timeSinceLastDispense += Time.deltaTime;
+		coinSpawner.GetComponent<SpawnCoins>().AddCoinsToDrop(payout);
 
-		if(timeSinceLastDispense >= dispenseDelay)
-		{
-			timeSinceLastDispense = 0.0f;
-
-			interactionsController.IncrementCredits();
-
-			payout--;
-		}
+		payout = 0;
 	}
 
 	private void GetResultsOfReels()
